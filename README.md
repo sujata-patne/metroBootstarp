@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Angular Panorama
 
 An AngularJS panorama implementation optimised for mobile devices, supporting width setting for each page. 
@@ -71,3 +72,6 @@ You can also use `ng-panorama` without ng-repeat, or even a mix.
 
 ## License :
 Angular Panorama is created by Tong Shen from [FotoDish](http://fotodish.com), and is distributed under the [MIT license](http://mit-license.org) .
+=======
+# metroBootstarp
+>>>>>>> 4de1f433723cc5c4543a08d7f607a85296eee919
