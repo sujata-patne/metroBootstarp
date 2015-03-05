@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=620, user-scalable=no">
+    <!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>-->
+
+    <link href='../src/css/angular-panorama.css' rel='stylesheet' type='text/css'>
+    <link href='../src/css/bootstrap.css' rel='stylesheet' type='text/css'>
+    <link href="../panorama.css" rel="stylesheet" type="text/css">
+</head>
+<body ng-app="snoothApp" ng-controller="demoController" >
+
+    <div class="dynamicdemo" ng-panorama="pages" ng-panorama-index="index" data-ng-swipe-left="next()" data-ng-swipe-right="prev()" >
+        <ul class="basic">
+            <li ng-repeat="page in pages" style="width: {{page.width}}%;" msd-wheel="scroll($event, $delta, $deltaX, $deltaY)" >
+                <div ui-view class="row"></div>
+            </li>
+        </ul>
+    </div>
+
+
+<script src="../angular.js"></script>
+<script src="../ui-bootstrap.js"></script>
+<script src="../angular-ui-router.js"></script>
+<script src="../angular-touch.js"></script>
+<script src="../hamster.js"></script>
+<script src="../mousewheel.js"></script>
+<!-- include non-distributed panorama src -->
+<script src="../angular-panorama.js"></script>
+<script src="../src/app.js"></script>
+<script src="../src/services/wines.js"></script>
+<script src="../src/services/panorama.js"></script>
+<script src="../src/controllers/wines.js"></script>
+
+<script>
+    /* demo page code */
+    angular.module('snoothApp')
+            .controller('demoController', ['$scope', 'Wines', '$timeout',function ($scope, Wines, $timeout) {
+                var searchData = {
+                    'searchText': $scope.searchText,
+                    'maxPrice': parseInt($scope.maxPrice),
+                    'minPrice': parseInt($scope.minPrice),
+                    'type': $scope.type,
+                    'rank': $scope.rank,
+                    'available':$scope.available,
+                    'offset':1
+                };
+                Wines.getWines(searchData, function (wines) {
+                    $scope.wines = wines;
+                    $scope.pages = [];
+                    $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1], wines));
+                    $scope.index = 1;
+                    $scope.offset = 1;
+                });
+                $scope.addPage = function (item, data, direction) {
+                    if (!item) item = {id: 1};
+                    if (!direction) direction = 1;
+                    return {
+                        id: item.id + direction,
+                        width: 80,
+                        data: data
+                    };
+                }
+                $scope.clearSearch = function () {
+                    $scope.searchText = null;
+                    $scope.maxPrice = null;
+                    $scope.minPrice = null;
+                    $scope.type = null;
+                    $scope.available = null;
+                    $scope.rank = null;
+                    $scope.index = 0;
+                    $scope.searchWines();
+                };
+                $scope.wineLists = function(wines){
+                    $scope.pages = [];
+                    $scope.wineList = [];
+                    for (var i = 0; i < wines.length; i += 2) {
+                        $scope.wineList.push( wines.slice(i, i + 2) );
+                    }
+                    angular.forEach($scope.wineList,function(wines){
+                        $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1],wines));
+                    });
+                }
+                $scope.searchWines = function (offset) {
+                    if (offset == undefined || offset == null) {
+                        $scope.offset = $scope.index * 10;
+                    } else {
+                        $scope.offset = offset;
+                    }
+                    var searchData = {
+                        'searchText': $scope.searchText,
+                        'maxPrice': parseInt($scope.maxPrice),
+                        'minPrice': parseInt($scope.minPrice),
+                        'type': $scope.type,
+                        'rank': $scope.rank,
+                        'available': $scope.available,
+                        'offset':$scope.offset
+                    };
+                    Wines.getWines(searchData, function (wines) {
+                        $scope.wines = wines;
+                        $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1], wines));
+                        //console.log($scope.pages);
+                    });
+                };
+                $scope.scroll = function ($event, delta, deltax, deltay) {
+                    if (delta > 0) {
+                        if ($scope.index > 0) {
+                            $scope.index--;
+                        } else {
+                            $scope.index = 1;
+                            return false;
+                        }
+                        //console.log("prev "+$scope.index)
+                    } else {
+                        if ($scope.index < $scope.pages.length - 1) {
+                            $scope.index++;
+                        } else {
+                            $scope.offset = $scope.index * 10;
+                            $timeout($scope.searchWines($scope.offset),5000);
+                            return false;
+                        }
+                        //console.log("next "+$scope.index)
+                    }
+                }
+
+                $scope.prev = function () {
+                    if ($scope.index > 0) {
+                        $scope.index--;
+                    } else {
+                        $scope.index = 1;
+                        return false;
+                    }
+                    //console.log("prev "+$scope.index)
+                }
+                $scope.next = function () {
+                    if ($scope.index < $scope.pages.length - 1) {
+                        $scope.index++;
+                    } else {
+                        $scope.offset = $scope.index * 10;
+                        $scope.searchWines($scope.offset);
+                        return false;
+                    }
+                    //console.log("next "+$scope.index)
+                }
+            }])
+
+</script>
+
+</body>
+</html>
