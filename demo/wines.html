@@ -1,0 +1,13 @@
+﻿<div ng-repeat="wine in page.data" class="col-xs-12 col-md-2 panel-wrapper" style="margin: 0px 5px">
+    <div class="panel-title">
+        <a target="_blank" href="{{wine.link}}" title="{{wine.name}}">{{ wine.name | limitTo: 20 }}{{wine.name.length > 30 ? '...' : ''}}</a>
+    </div>
+    <div class="panel-stage">
+        <a target="_blank" href="{{wine.link}}"><img title="{{wine.name}}" src="{{wine.image}}" align="middle" class="media-middle img-responsive"></a>
+        <!--<span data-ng-model="wine.available" ng-show="wine.available"><img src="../images/available.jpg" class="img-responsive"></span>-->
+    </div>
+    <div class="panel-notes">
+        <span>{{wine.price}}<b>$</b></span>
+        <span class="star-rating" star-rating rating-value="wine.snoothrank" data-max="5"></span>
+    </div>
+</div>
