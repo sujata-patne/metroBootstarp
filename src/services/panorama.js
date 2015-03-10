@@ -12,6 +12,8 @@ angular.module('snoothApp')
                 data: data
             };
         }
-
+        service.createPage = function(pages){
+            return pages.push(this.addPage(pages[pages.length - 1]));
+        }
         return service;
     }]);

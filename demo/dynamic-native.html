@@ -3,22 +3,45 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=620, user-scalable=no">
     <!--<link href='http://fonts.googleapis.com/css?family=Droid+Sans:400,700' rel='stylesheet' type='text/css'>-->
 
     <link href='../src/css/angular-panorama.css' rel='stylesheet' type='text/css'>
     <link href='../src/css/bootstrap.css' rel='stylesheet' type='text/css'>
     <link href="../panorama.css" rel="stylesheet" type="text/css">
 </head>
-<body ng-app="snoothApp" ng-controller="demoController" >
-
-    <div class="dynamicdemo" ng-panorama="pages" ng-panorama-index="index" data-ng-swipe-left="next()" data-ng-swipe-right="prev()" >
-        <ul class="basic">
-            <li ng-repeat="page in pages" style="width: {{page.width}}%;" msd-wheel="scroll($event, $delta, $deltaX, $deltaY)" >
-                <div ui-view class="row"></div>
-            </li>
-        </ul>
+<body ng-app="snoothApp"  >
+<header id="nav-bar" class="container">
+    <div class="row">
+        <div class="span12">
+            <div id="header-container">
+                <a ui-sref="wines" id="backbutton" class="win-backbutton"></a>
+                <h5>BootMetro</h5>
+                <div class="dropdown">
+                    <a  ui-sref="wines"class="header-dropdown dropdown-toggle accent-color" data-toggle="dropdown">
+                        Metro Layouts
+                        <b class="caret"></b>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a ui-sref="wines">Home</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="top-info" class="pull-right">
+                <a id="settings" href="#" class="win-command pull-right" >
+                    <span class="win-commandicon win-commandring icon-cog-3"></span>
+                </a>
+                <a id="logged-user" href="#" class="win-command pull-right">
+                    <span class="win-commandicon win-commandring icon-user"></span>
+                </a>
+                <div class="pull-left">
+                    <h3>FirstName</h3>
+                    <h4>LastName</h4>
+                </div>
+            </div>
+        </div>
     </div>
+</header>
+<div ui-view class="row"></div>
 
 
 <script src="../angular.js"></script>
@@ -33,120 +56,7 @@
 <script src="../src/services/wines.js"></script>
 <script src="../src/services/panorama.js"></script>
 <script src="../src/controllers/wines.js"></script>
-
-<script>
-    /* demo page code */
-    angular.module('snoothApp')
-            .controller('demoController', ['$scope', 'Wines', '$timeout',function ($scope, Wines, $timeout) {
-                var searchData = {
-                    'searchText': $scope.searchText,
-                    'maxPrice': parseInt($scope.maxPrice),
-                    'minPrice': parseInt($scope.minPrice),
-                    'type': $scope.type,
-                    'rank': $scope.rank,
-                    'available':$scope.available,
-                    'offset':1
-                };
-                Wines.getWines(searchData, function (wines) {
-                    $scope.wines = wines;
-                    $scope.pages = [];
-                    $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1], wines));
-                    $scope.index = 1;
-                    $scope.offset = 1;
-                });
-                $scope.addPage = function (item, data, direction) {
-                    if (!item) item = {id: 1};
-                    if (!direction) direction = 1;
-                    return {
-                        id: item.id + direction,
-                        width: 80,
-                        data: data
-                    };
-                }
-                $scope.clearSearch = function () {
-                    $scope.searchText = null;
-                    $scope.maxPrice = null;
-                    $scope.minPrice = null;
-                    $scope.type = null;
-                    $scope.available = null;
-                    $scope.rank = null;
-                    $scope.index = 0;
-                    $scope.searchWines();
-                };
-                $scope.wineLists = function(wines){
-                    $scope.pages = [];
-                    $scope.wineList = [];
-                    for (var i = 0; i < wines.length; i += 2) {
-                        $scope.wineList.push( wines.slice(i, i + 2) );
-                    }
-                    angular.forEach($scope.wineList,function(wines){
-                        $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1],wines));
-                    });
-                }
-                $scope.searchWines = function (offset) {
-                    if (offset == undefined || offset == null) {
-                        $scope.offset = $scope.index * 10;
-                    } else {
-                        $scope.offset = offset;
-                    }
-                    var searchData = {
-                        'searchText': $scope.searchText,
-                        'maxPrice': parseInt($scope.maxPrice),
-                        'minPrice': parseInt($scope.minPrice),
-                        'type': $scope.type,
-                        'rank': $scope.rank,
-                        'available': $scope.available,
-                        'offset':$scope.offset
-                    };
-                    Wines.getWines(searchData, function (wines) {
-                        $scope.wines = wines;
-                        $scope.pages.push($scope.addPage($scope.pages[$scope.pages.length - 1], wines));
-                        //console.log($scope.pages);
-                    });
-                };
-                $scope.scroll = function ($event, delta, deltax, deltay) {
-                    if (delta > 0) {
-                        if ($scope.index > 0) {
-                            $scope.index--;
-                        } else {
-                            $scope.index = 1;
-                            return false;
-                        }
-                        //console.log("prev "+$scope.index)
-                    } else {
-                        if ($scope.index < $scope.pages.length - 1) {
-                            $scope.index++;
-                        } else {
-                            $scope.offset = $scope.index * 10;
-                            $timeout($scope.searchWines($scope.offset),5000);
-                            return false;
-                        }
-                        //console.log("next "+$scope.index)
-                    }
-                }
-
-                $scope.prev = function () {
-                    if ($scope.index > 0) {
-                        $scope.index--;
-                    } else {
-                        $scope.index = 1;
-                        return false;
-                    }
-                    //console.log("prev "+$scope.index)
-                }
-                $scope.next = function () {
-                    if ($scope.index < $scope.pages.length - 1) {
-                        $scope.index++;
-                    } else {
-                        $scope.offset = $scope.index * 10;
-                        $scope.searchWines($scope.offset);
-                        return false;
-                    }
-                    //console.log("next "+$scope.index)
-                }
-            }])
-
-</script>
+<script src="../src/controllers/details.js"></script>
 
 </body>
 </html>

@@ -1,13 +1,44 @@
-﻿<div ng-repeat="wine in page.data" class="col-xs-12 col-md-2 panel-wrapper" style="margin: 0px 5px">
-    <div class="panel-title">
-        <a target="_blank" href="{{wine.link}}" title="{{wine.name}}">{{ wine.name | limitTo: 20 }}{{wine.name.length > 30 ? '...' : ''}}</a>
-    </div>
-    <div class="panel-stage">
-        <a target="_blank" href="{{wine.link}}"><img title="{{wine.name}}" src="{{wine.image}}" align="middle" class="media-middle img-responsive"></a>
-        <!--<span data-ng-model="wine.available" ng-show="wine.available"><img src="../images/available.jpg" class="img-responsive"></span>-->
-    </div>
-    <div class="panel-notes">
-        <span>{{wine.price}}<b>$</b></span>
-        <span class="star-rating" star-rating rating-value="wine.snoothrank" data-max="5"></span>
+﻿<div class="dynamicdemo" ng-panorama="pages" ng-panorama-index="index" data-ng-swipe-left="next()" data-ng-swipe-right="prev()" >
+    <ul class="basic">
+        <li ng-repeat="page in pages" style="width: {{page.width}}%;" msd-wheel="scroll($event, $delta, $deltaX, $deltaY)" >
+            <div ng-repeat="wine in page.data" class="col-xs-12 col-md-2 panel-wrapper" style="margin: 10px">
+                <div class="panel-title">
+                    <a ui-sref="details({id:wine.code})" title="{{wine.name}}">{{ wine.name | limitTo: 20 }}{{wine.name.length > 30 ? '...' : ''}}</a>
+                </div>
+                <div class="panel-stage">
+                    <a ui-sref="details({id:wine.code})" ><img title="{{wine.name}}" src="{{wine.image}}" align="middle" class="media-middle img-responsive"></a>
+                    <!--<span data-ng-model="wine.available" ng-show="wine.available"><img src="../images/available.jpg" class="img-responsive"></span>-->
+                </div>
+                <div class="panel-notes">
+                    <span>{{wine.price}}<b>$</b></span>
+                    <span class="star-rating" star-rating rating-value="wine.snoothrank" data-max="5"></span>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+<div  class="navbar navbar-inverse navbar-fixed-bottom">
+    <div  class="container">
+        <div class="row" ng-hide="isVisible">
+            <div class="col-xs-12 col-md-12 text-center" ng-mouseenter="isVisible=!isVisible">
+                Contact Me <a target="_blank" href="http://https://mail.google.com/">sujata.halwai@synerzip.com</a>
+            </div>
+        </div>
+        <div class="row" ng-show="isVisible">
+            <div class="col-xs-12 col-md-12 text-center" ng-mouseleave="isVisible=!isVisible">
+                <form name="searchform" method="post" class="form-inline">
+                    <div class="input-group input-group-sm ">
+                        <input type="text" data-ng-model="searchText" placeholder="Search Text" class="input-sm" style="width:15%" />&nbsp;
+                        <input type="text" data-ng-model="type" placeholder="Search By Product type" class="input-sm" style="width:15%" />&nbsp;
+                        <input type="text" data-ng-model="minPrice" placeholder="Search By Min Price" class="input-sm" style="width:15%" />&nbsp;
+                        <input type="text" data-ng-model="maxPrice" placeholder="Search By Max Price" class="input-sm" style="width:15%" />&nbsp;
+                        <input type="checkbox" data-ng-model="available">Available&nbsp;
+                        <input type="checkbox" data-ng-model="rank">Sort By Rank&nbsp;
+                        <button class="btn btn-danger btn-xs" type="button" ng-click="searchWines()"><i class="glyphicon glyphicon-search"></i></button>&nbsp;&nbsp;
+                        <button class="btn btn-danger  btn-xs" type="button" ng-click="clearSearch()"><i class="glyphicon glyphicon-refresh"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
