@@ -10,15 +10,8 @@
     <link href='../src/css/bootstrap.css' rel='stylesheet' type='text/css'>
     <link href="../panorama.css" rel="stylesheet" type="text/css">
 </head>
-<body ng-app="snoothApp" ng-controller="demoController" >
-
-    <div class="dynamicdemo" ng-panorama="pages" ng-panorama-index="index" data-ng-swipe-left="next()" data-ng-swipe-right="prev()" >
-        <ul class="basic">
-            <li ng-repeat="page in pages" style="width: {{page.width}}%;" msd-wheel="scroll($event, $delta, $deltaX, $deltaY)" >
-                <div ui-view class="row"></div>
-            </li>
-        </ul>
-    </div>
+<body ng-app="snoothApp" >
+<div ui-view class="row"></div>
 
 
 <script src="../angular.js"></script>
@@ -33,6 +26,7 @@
 <script src="../src/services/wines.js"></script>
 <script src="../src/services/panorama.js"></script>
 <script src="../src/controllers/wines.js"></script>
+<script src="../src/controllers/wineDetails.js"></script>
 
 <script>
     /* demo page code */

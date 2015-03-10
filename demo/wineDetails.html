@@ -1,0 +1,19 @@
+<div ng-repeat="wine in wineDetails" class="col-xs-12 col-md-12 text-center">
+    <div class="panel-title">
+        <h2>{{wine.name}}</h2>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <a target="_blank" href="{{wine.link}}"><img title="{{wine.name}}" src="{{wine.image}}" align="middle" class="media-middle img-responsive"></a>
+        </div>
+        <div class="col-md-10">
+            <p>{{wine.wm_notes}}</p>
+        </div>
+    </div>
+
+    <div class="panel-notes">
+        <span>{{wine.price}}<b>$</b></span>
+        <span class="star-rating" star-rating rating-value="wine.snoothrank" data-max="5"></span>
+    </div>
+
+</div>
